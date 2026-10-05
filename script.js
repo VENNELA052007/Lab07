@@ -1,5 +1,4 @@
-// Replace YOUR_API_KEY with the API key from your OpenWeatherMap account.
-const API_KEY = "YOUR_API_KEY";
+const API_KEY = window.OPENWEATHER_API_KEY || "";
 const weatherForm = document.getElementById("weatherForm");
 const cityInput = document.getElementById("cityInput");
 const searchButton = document.getElementById("searchButton");
@@ -14,6 +13,12 @@ weatherForm.addEventListener("submit", async (event) => {
     weatherCard.hidden = true;
     message.textContent = "Please enter a city name before searching.";
     cityInput.focus();
+    return;
+  }
+
+  if (!API_KEY || API_KEY === "YOUR_API_KEY") {
+    weatherCard.hidden = true;
+    message.textContent = "Add your OpenWeatherMap API key to the local config.js file before searching.";
     return;
   }
 
@@ -36,7 +41,7 @@ weatherForm.addEventListener("submit", async (event) => {
         throw new Error("City not found. Check the spelling and try again.");
       }
       if (response.status === 401) {
-        throw new Error("The API key is missing or invalid. Add your OpenWeatherMap API key in script.js.");
+        throw new Error("The API key is invalid. Check the key in config.js.");
       }
       throw new Error("Weather data could not be loaded. Please try again later.");
     }
